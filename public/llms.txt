@@ -1,0 +1,19 @@
+# VALE?
+
+> Ferramenta web gratuita, em português do Brasil, de percepção de valor antes da compra. Assinatura: "O preço é só o começo." Não julga o consumo nem recomenda comprar ou não; mostra perspectivas sobre um preço e deixa a decisão com a pessoa.
+
+## O que o VALE? calcula
+
+- Tempo de trabalho: preço ÷ (renda líquida mensal ÷ horas trabalhadas no mês). Só aparece se a pessoa informar renda e horas.
+- Equivalências: quantas unidades de itens de referência cabem no preço, com fonte e data de cada preço de referência. Preços iniciais são estimativas identificadas.
+- Efeito de repetição: preço × ocorrências por ano (diária 365, dias úteis 260, semanal n × 52, mensal n × 12).
+- Custo por uso: preço ÷ número de usos estimado pela própria pessoa.
+- Relação com metas: preço ÷ valor-alvo da meta × 100, como comparação matemática.
+
+Todos os cálculos são determinísticos, sem inteligência artificial. Nenhum resultado é exibido sem os dados que o sustentam.
+
+## Páginas
+
+- [Avaliar uma compra](/): página inicial com o formulário de avaliação.
+- [Política de Privacidade](/privacidade): dados ficam no aparelho sem conta; conta opcional para sincronizar.
+- [Termos de Uso](/termos): ferramenta de reflexão, não consultoria financeira.

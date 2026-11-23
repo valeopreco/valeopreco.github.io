@@ -1,0 +1,108 @@
+@import '@fontsource/space-grotesk/latin-500.css';
+@import '@fontsource/space-grotesk/latin-600.css';
+@import '@fontsource/space-grotesk/latin-700.css';
+@import '@fontsource/manrope/latin-400.css';
+@import '@fontsource/manrope/latin-500.css';
+@import '@fontsource/manrope/latin-600.css';
+@import '@fontsource/manrope/latin-700.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Tokens VALE? — paleta oficial convertida para oklch (HEX de referência ao lado).
+ * O verde-lima é fundo de ação com texto carvão por cima; texto verde usa --vale-lime-ink.
+ */
+:root {
+  --vale-lime: oklch(90.4% 0.172 125.5); /* #C4F36A */
+  --vale-lime-dark: oklch(72.2% 0.173 128.9); /* #83B92E — bordas, foco, gráficos */
+  --vale-lime-ink: oklch(49.7% 0.128 130.7); /* #48700F — texto verde, 5,1:1 no papel */
+  --vale-ink: oklch(20.5% 0 0); /* #171717 */
+  --vale-paper: oklch(95.5% 0.012 91.5); /* #F3F0E7 */
+  --vale-white: oklch(100% 0 0); /* #FFFFFF — só cards sobre o papel */
+  --vale-gray: oklch(91.3% 0.013 91.5); /* #E5E2D9 */
+  --vale-muted: oklch(50.8% 0.012 106.8); /* #66665E */
+  --vale-danger: oklch(49.5% 0.142 31.2); /* #A33A2A — só ações destrutivas */
+  --vale-line: color-mix(in oklch, var(--vale-ink) 12%, transparent);
+
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Manrope', system-ui, sans-serif;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  color-scheme: light;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--vale-paper);
+  color: var(--vale-ink);
+  font-family: var(--font-body);
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+}
+
+.num {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+:focus-visible {
+  outline: 2px solid var(--vale-ink);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fade-in {
+    animation: fade-in 220ms ease-out both;
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+      filter: blur(2px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+      filter: none;
+    }
+  }
+  .skeleton {
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    50% {
+      opacity: 0.55;
+    }
+  }
+}
+
+/* Remove setas de input numérico; usamos teclado numérico e validação própria. */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}
