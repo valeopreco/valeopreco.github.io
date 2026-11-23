@@ -18,8 +18,6 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # Lê VITE_SUPABASE_* do ambiente github-pages (Settings → Environments), além das do repositório.
-    environment: github-pages
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -30,11 +28,7 @@ jobs:
       - run: npm test
       - name: Build
         run: npm run build
-        env:
-          VITE_SITE_URL: https://valeopreco.github.io
-          # Valores públicos (chave anon). Aceita tanto Variables quanto Secrets em Settings → Secrets and variables → Actions.
-          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY }}
+        # Configuração pública de produção fica em .env.production (URL do site e do Supabase, chave anon).
       # GitHub Pages não reescreve rotas: o 404.html carrega o app em qualquer endereço.
       - run: cp dist/index.html dist/404.html && touch dist/.nojekyll
       - uses: actions/upload-pages-artifact@v3
