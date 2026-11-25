@@ -16,7 +16,6 @@ function RefForm({ onDone }: { onDone(): void }) {
   const [plural, setPlural] = useState('');
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState<CategorySlug>('alimentacao');
-  const [universal, setUniversal] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   async function submit(e: FormEvent) {
@@ -36,7 +35,7 @@ function RefForm({ onDone }: { onDone(): void }) {
       priceCents: p!,
       source: 'Sua referência',
       updatedAt: new Date().toISOString().slice(0, 10),
-      universal,
+      universal: false,
       estimated: false,
       active: true,
     };
@@ -66,10 +65,6 @@ function RefForm({ onDone }: { onDone(): void }) {
           </select>
         )}
       </Field>
-      <label className="flex min-h-[44px] cursor-pointer items-center gap-3 text-[14px]">
-        <input type="checkbox" className="h-5 w-5 accent-[var(--vale-ink)]" checked={universal} onChange={(e) => setUniversal(e.target.checked)} />
-        Usar em compras de qualquer categoria
-      </label>
       <Button type="submit" block>
         Adicionar referência
       </Button>
@@ -85,7 +80,7 @@ export function OwnReferences() {
   return (
     <div>
       <p className="text-[14px] text-muted">
-        Coisas que você costuma comprar viram comparações nas avaliações. Elas aparecem para compras da mesma categoria.
+        Coisas que você costuma comprar viram comparações nas avaliações, com preferência para compras da mesma categoria.
       </p>
       {q.status === 'loading' && <div className="mt-3"><ListSkeleton rows={1} /></div>}
       {q.status === 'ready' && q.data.length > 0 && (
@@ -95,7 +90,7 @@ export function OwnReferences() {
               <div className="flex-1">
                 <p className="text-[15px] font-semibold">{r.singular}</p>
                 <p className="text-[13px] text-muted">
-                  {formatBRL(r.priceCents)} · {r.universal ? 'todas as categorias' : categoryName(r.categorySlug)}
+                  {formatBRL(r.priceCents)} · {categoryName(r.categorySlug)}
                 </p>
               </div>
               <button

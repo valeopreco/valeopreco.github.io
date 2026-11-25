@@ -5,7 +5,7 @@ import type { PriceReference } from '@vale/engine';
  * na interface com o selo "estimativa". Substitua por preços levantados com fonte
  * e data reais; o mesmo conteúdo existe em supabase/seed.sql.
  */
-const SOURCE = 'Estimativa VALE? (valor ilustrativo)';
+const SOURCE = 'estimativa do VALE?';
 const DATE = '2026-11-23';
 
 type Seed = [id: string, singular: string, plural: string, cat: PriceReference['categorySlug'], reais: number, universal?: boolean];
@@ -27,6 +27,14 @@ const rows: Seed[] = [
   ['limpeza', 'kit básico de produtos de limpeza', 'kits básicos de produtos de limpeza', 'casa', 50],
   ['academia', 'mês de academia', 'meses de academia', 'saude', 100],
   ['corte', 'corte de cabelo', 'cortes de cabelo', 'servicos', 35],
+  // Itens de valor mais alto, para compras maiores não virarem "164 passagens".
+  ['botijao', 'botijão de gás de 13 kg', 'botijões de gás de 13 kg', 'casa', 120],
+  ['perfume', 'perfume nacional', 'perfumes nacionais', 'saude', 150],
+  ['internet', 'mês de internet em casa', 'meses de internet em casa', 'servicos', 100],
+  ['tenis', 'par de tênis esportivo', 'pares de tênis esportivos', 'vestuario', 300],
+  ['pousada', 'diária em pousada simples', 'diárias em pousada simples', 'lazer', 200],
+  ['celular', 'celular básico', 'celulares básicos', 'tecnologia', 1000],
+  ['tv', 'TV de 43 polegadas', 'TVs de 43 polegadas', 'tecnologia', 1800],
 ];
 
 export const SEED_REFERENCES: PriceReference[] = rows.map(([id, singular, plural, categorySlug, reais, universal]) => ({

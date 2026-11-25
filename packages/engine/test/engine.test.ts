@@ -98,9 +98,28 @@ describe('não inventa dados ausentes', () => {
 });
 
 describe('regra de relevância das equivalências', () => {
-  it('ignora referências de outra categoria que não são universais', () => {
-    const r = computeEquivalences(10000, [ref({ categorySlug: 'casa' })], 'lazer');
-    expect(r.available).toBe(false);
+  it('usa referências de outras categorias quando a da compra não tem', () => {
+    const r = computeEquivalences(10000, [ref({ id: 'casa', categorySlug: 'casa' })], 'lazer');
+    expect(r.available && r.data.items[0]?.refId).toBe('casa');
+  });
+  it('no máximo uma referência por categoria, para variar', () => {
+    const refs = [
+      ref({ id: 'a1', categorySlug: 'alimentacao', priceCents: 1000 }),
+      ref({ id: 'a2', categorySlug: 'alimentacao', priceCents: 2000 }),
+      ref({ id: 't1', categorySlug: 'transporte', priceCents: 1500 }),
+    ];
+    const r = computeEquivalences(10000, refs);
+    const cats = r.available ? r.data.items.map((i) => i.refId) : [];
+    expect(cats).toHaveLength(2);
+    expect(cats.filter((id) => id.startsWith('a'))).toHaveLength(1);
+  });
+  it('prefere quantidades fáceis de imaginar a centenas de unidades', () => {
+    const refs = [
+      ref({ id: 'barato', categorySlug: 'transporte', priceCents: 500 }), // 164 un.
+      ref({ id: 'medio', categorySlug: 'casa', priceCents: 12000 }), // 6 un.
+    ];
+    const r = computeEquivalences(82000, refs);
+    expect(r.available && r.data.items[0]?.refId).toBe('medio');
   });
   it('ignora inativas, mais caras que a compra e acima de 500 unidades', () => {
     const refs = [
@@ -112,9 +131,10 @@ describe('regra de relevância das equivalências', () => {
   });
   it('prefere a mesma categoria e limita a 3', () => {
     const refs = [
-      ref({ id: 'u1', universal: true, priceCents: 500 }),
-      ref({ id: 'u2', universal: true, priceCents: 700 }),
-      ref({ id: 'u3', universal: true, priceCents: 900 }),
+      ref({ id: 'u1', categorySlug: 'alimentacao', priceCents: 1500 }),
+      ref({ id: 'u2', categorySlug: 'transporte', priceCents: 1600 }),
+      ref({ id: 'u3', categorySlug: 'casa', priceCents: 1700 }),
+      ref({ id: 'u4', categorySlug: 'saude', priceCents: 1800 }),
       ref({ id: 'cat', categorySlug: 'lazer', priceCents: 3000 }),
     ];
     const r = computeEquivalences(10000, refs, 'lazer');

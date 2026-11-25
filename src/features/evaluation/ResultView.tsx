@@ -10,9 +10,9 @@ const monthBR = (yyyyMm: string) => `${MESES.at(Number(yyyyMm.slice(5, 7)) - 1)}
 
 /** Uma linha por fonte + aviso único de correção pela inflação. */
 function sourcesNote(items: EquivalenceItem[]): string {
-  const fontes = [...new Set(items.map((i) => `${i.source}, conferido em ${dateBR(i.updatedAt)}`))].join('; ');
+  const fontes = [...new Set(items.map((i) => `${i.source}, ${dateBR(i.updatedAt)}`))].join('; ');
   const indices = [...new Set(items.flatMap((i) => (i.adjustment ? [i.adjustment.index] : [])))];
-  const correcao = indices.length ? ` Itens marcados foram corrigidos pela inflação (${indices.join(' e ')}).` : '';
+  const correcao = indices.length ? ` Corrigidos pela inflação (${indices.join(' e ')}).` : '';
   return `Preços de referência: ${fontes}.${correcao}`;
 }
 

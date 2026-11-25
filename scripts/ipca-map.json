@@ -48,5 +48,30 @@
   "corte": [
     "Cabeleireiro e barbeiro",
     "Cabeleireiro"
+  ],
+  "botijao": [
+    "Gás de botijão"
+  ],
+  "perfume": [
+    "Perfume"
+  ],
+  "internet": [
+    "Acesso à internet",
+    "Plano de internet",
+    "Internet"
+  ],
+  "tenis": [
+    "Tênis",
+    "Calçado masculino"
+  ],
+  "pousada": [
+    "Hospedagem",
+    "Hotel"
+  ],
+  "celular": [
+    "Aparelho telefônico"
+  ],
+  "tv": [
+    "Televisor"
   ]
 }
