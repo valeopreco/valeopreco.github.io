@@ -83,7 +83,7 @@ export function AppShell() {
         <header className="flex items-center justify-between px-5 pt-4 lg:hidden">
           <LogoLink />
         </header>
-        <main id="conteudo" className="mx-auto w-full max-w-app flex-1 px-5 pb-[calc(104px+env(safe-area-inset-bottom))] pt-4 lg:pb-16 lg:pt-12">
+        <main id="conteudo" className={`mx-auto w-full flex-1 ${pathname === '/' ? 'max-w-app lg:max-w-[64rem]' : 'max-w-app'} px-5 pb-[calc(104px+env(safe-area-inset-bottom))] pt-4 lg:pb-16 lg:pt-12`}>
           <StorageBanner />
           <Outlet />
         </main>

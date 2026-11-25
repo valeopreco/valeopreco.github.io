@@ -1,4 +1,5 @@
 import { formatBRL, formatPct, frequencyLabel, type EquivalenceItem, type EvaluationInput, type EvaluationResult } from '@vale/engine';
+import type { ReactNode } from 'react';
 import { categoryName } from '@/lib/categories';
 import { copy } from '@/content/copy';
 import { EstimateTag, InsightCard, MoneyValue, SetupCard, SourceNote } from '@/components/vale/bits';
@@ -20,7 +21,7 @@ function Summary({ input }: { input: EvaluationInput }) {
   return (
     <div className="mb-2">
       <p className="text-[15px] font-semibold text-muted">{input.description || 'Sua compra'}</p>
-      <p className="num mt-1 text-[44px] font-semibold leading-none tracking-[-0.03em] sm:text-[52px]">{formatBRL(input.priceCents)}</p>
+      <p className="num-display mt-1 text-[44px] font-semibold leading-none tracking-[-0.03em] sm:text-[52px]">{formatBRL(input.priceCents)}</p>
       {meta.length > 0 && <p className="mt-2 text-[14px] text-muted">{meta.join(' · ')}</p>}
     </div>
   );
@@ -47,15 +48,18 @@ interface Props {
   result: EvaluationResult;
   /** live = avaliação atual (mostra convites para configurar); snapshot = registro congelado. */
   mode: 'live' | 'snapshot';
+  /** Controles de cenário (frequência, usos) mostrados logo abaixo do resumo. */
+  tweaks?: ReactNode;
 }
 
-export function ResultView({ input, result, mode }: Props) {
+export function ResultView({ input, result, mode, tweaks }: Props) {
   const { workTime, equivalences, recurrence, costPerUse, goals } = result;
 
   return (
     <div className="flex flex-col gap-4">
       <Summary input={input} />
 
+      {/* Ajustes logo depois da primeira descoberta: ela aparece antes de qualquer pedido. */}
       {workTime.available ? (
         <InsightCard icon="clock" question={copy.q.workTime}>
           <p className="font-display text-[30px] font-semibold leading-tight tracking-[-0.02em]">{workTime.data.label}</p>
@@ -64,20 +68,18 @@ export function ResultView({ input, result, mode }: Props) {
             Calculado com {formatBRL(workTime.data.hourlyRateCents)} por hora (renda líquida dividida pelas horas trabalhadas no mês).
           </SourceNote>
         </InsightCard>
-      ) : (
-        mode === 'live' && <SetupCard icon="clock" question={copy.q.workTime} text={copy.setup.workTime} to="/perfil?voltar=resultado" cta={copy.setup.workTimeCta} />
-      )}
+      ) : null}
 
       {equivalences.available && (
         <InsightCard icon="scale" question={copy.q.equivalences} tag={equivalences.data.items.some((i) => i.estimated) ? <EstimateTag /> : undefined}>
           <ul className="flex flex-col divide-y divide-[var(--vale-line)]">
             {equivalences.data.items.map((i) => (
               <li key={i.refId} className="flex items-baseline gap-4 py-2.5 first:pt-0 last:pb-0">
-                <span className="num min-w-[3.2ch] text-right text-[28px] font-semibold leading-none">{i.quantity.toLocaleString('pt-BR')}</span>
+                <span className="num-display min-w-[3.2ch] text-right text-[28px] font-semibold leading-none">{i.quantity.toLocaleString('pt-BR')}</span>
                 <span className="text-[15px] leading-snug">
                   {i.label}
                   <span className="block text-[13px] text-muted">
-                    a {formatBRL(i.unitPriceCents)} cada
+                    <span className="whitespace-nowrap">a {formatBRL(i.unitPriceCents)} cada</span>
                     {i.adjustment && <span className="whitespace-nowrap"> · corrigido até {monthBR(i.adjustment.through)}</span>}
                   </span>
                 </span>
@@ -88,9 +90,11 @@ export function ResultView({ input, result, mode }: Props) {
         </InsightCard>
       )}
 
+      {tweaks}
+
       {recurrence.available && (
         <InsightCard icon="repeat" question={copy.q.recurrence}>
-          <p className="num text-[30px] font-semibold leading-tight tracking-[-0.02em]">{formatBRL(recurrence.data.yearlyCents)}</p>
+          <p className="num-display text-[30px] font-semibold leading-tight tracking-[-0.02em]">{formatBRL(recurrence.data.yearlyCents)}</p>
           <p className="mt-1 text-[15px]">
             em um ano, comprando {recurrence.data.frequencyLabel} ({recurrence.data.occurrencesPerYear.toLocaleString('pt-BR')} vezes).
           </p>
@@ -105,7 +109,7 @@ export function ResultView({ input, result, mode }: Props) {
       {costPerUse.available && (
         <InsightCard icon="ticket" question={copy.q.costPerUse} tag={<EstimateTag>sua estimativa</EstimateTag>}>
           <p className="text-[15px]">
-            <MoneyValue cents={costPerUse.data.cents} className="text-[30px] tracking-[-0.02em]" /> <span>por uso</span>
+            <span className="num-display text-[30px] font-semibold tracking-[-0.02em]">{formatBRL(costPerUse.data.cents)}</span> <span>por uso</span>
           </p>
           <SourceNote>{copy.costPerUseNote(costPerUse.data.uses)}</SourceNote>
         </InsightCard>
@@ -132,8 +136,17 @@ export function ResultView({ input, result, mode }: Props) {
           </ul>
           <SourceNote>{copy.goalsDisclaimer}</SourceNote>
         </InsightCard>
-      ) : (
-        mode === 'live' && <SetupCard icon="target" question={copy.q.goals} text={copy.setup.goals} to="/metas?voltar=resultado" cta={copy.setup.goalsCta} />
+      ) : null}
+
+      {/* Convites para completar ficam no fim: a primeira coisa vista é sempre uma descoberta. */}
+      {mode === 'live' && (!workTime.available || !goals.available) && (
+        <div className="mt-2 flex flex-col gap-3">
+          <h2 className="px-1 text-[14px] font-semibold text-muted">Quer ver mais?</h2>
+          {!workTime.available && (
+            <SetupCard icon="clock" question={copy.q.workTime} text={copy.setup.workTime} to="/perfil?voltar=resultado" cta={copy.setup.workTimeCta} />
+          )}
+          {!goals.available && <SetupCard icon="target" question={copy.q.goals} text={copy.setup.goals} to="/metas?voltar=resultado" cta={copy.setup.goalsCta} />}
+        </div>
       )}
     </div>
   );

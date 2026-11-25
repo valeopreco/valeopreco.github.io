@@ -10,9 +10,10 @@ import type { Decision, SavedEvaluation } from '@/data/models';
 import { buildSaved, draftToInput, loadContext } from './draft';
 import { ResultView } from './ResultView';
 import { DecisionBar } from './DecisionBar';
+import { ScenarioTweaks } from './ScenarioTweaks';
 
 export function ResultPage() {
-  const { form, submitted, savedId, markSaved, reset, setDetailsOpen } = useDraft();
+  const { form, submitted, savedId, markSaved, reset } = useDraft();
   const navigate = useNavigate();
   const { input } = useMemo(() => draftToInput(form), [form]);
   const ctx = useRepoQuery(loadContext);
@@ -58,20 +59,7 @@ export function ResultPage() {
       </div>
 
       <h1 className="sr-only">Resultado da avaliação</h1>
-      <ResultView input={input} result={result} mode={savedEval ? 'snapshot' : 'live'} />
-
-      {!savedEval && (!input.frequency || !input.estimatedUses) && (
-        <button
-          onClick={() => {
-            setDetailsOpen(true);
-            navigate('/');
-          }}
-          className="mt-3 inline-flex min-h-[44px] items-center gap-1 text-left text-[14px] font-semibold text-lime-ink underline underline-offset-4"
-        >
-          Informar frequência ou usos para ver mais perspectivas
-          <Icon name="chevron" size={16} />
-        </button>
-      )}
+      <ResultView input={input} result={result} mode={savedEval ? 'snapshot' : 'live'} tweaks={savedEval ? undefined : <ScenarioTweaks />} />
 
       <div className="mt-6">
         <DecisionBar current={savedEval?.decisions.at(-1)} onDecide={decide} />

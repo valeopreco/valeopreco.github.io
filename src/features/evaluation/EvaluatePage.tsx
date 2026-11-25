@@ -1,14 +1,15 @@
-import { useRef, useState, type FormEvent } from 'react';
+import { useMemo, useRef, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Frequency } from '@vale/engine';
 import { useDraft } from '@/stores/draft';
 import { CATEGORIES } from '@/lib/categories';
 import { Field, Input, MoneyInput } from '@/components/ui/Field';
 import { Button } from '@/components/ui/Button';
-import { Logo } from '@/components/vale/Brand';
 import { Icon } from '@/components/vale/Icon';
 import { copy } from '@/content/copy';
-import { draftToInput, type DraftErrors } from './draft';
+import { draftToInput, loadContext, type DraftErrors } from './draft';
+import { useRepoQuery } from '@/lib/useRepoQuery';
+import { InlinePreview, PreviewPanel, previewOf } from './LivePreview';
 
 const FREQS: { kind: Frequency['kind']; label: string }[] = [
   { kind: 'once', label: 'Só uma vez' },
@@ -38,6 +39,12 @@ export function EvaluatePage() {
   const [errors, setErrors] = useState<DraftErrors>({});
   const priceRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+  const ctx = useRepoQuery(loadContext);
+  // Prévia: mesmo motor do resultado, recalculada a cada tecla.
+  const preview = useMemo(
+    () => previewOf(draftToInput(form).input, ctx.status === 'ready' ? ctx.data : undefined),
+    [form, ctx],
+  );
 
   function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -55,12 +62,10 @@ export function EvaluatePage() {
   const timesVisible = form.frequencyKind === 'weekly' || form.frequencyKind === 'monthly';
 
   return (
-    <div className="fade-in">
+    <div className="fade-in lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:items-start lg:gap-10">
+      <div className="min-w-0">
       <div className="mb-8 lg:mb-10">
-        <div className="hidden lg:block">
-          <Logo size="lg" />
-        </div>
-        <h1 className="mt-0 font-display text-[34px] font-semibold leading-[1.05] tracking-[-0.03em] sm:text-[42px] lg:mt-6">{copy.tagline}</h1>
+        <h1 className="mt-0 font-display text-[34px] font-semibold leading-[1.05] tracking-[-0.03em] sm:text-[42px] lg:text-[48px]">{copy.tagline}</h1>
         <p className="mt-3 max-w-[46ch] text-[16px] leading-relaxed text-muted">{copy.homeIntro}</p>
       </div>
 
@@ -79,6 +84,9 @@ export function EvaluatePage() {
               />
             )}
           </Field>
+          <div className="-mt-3">
+            <InlinePreview result={preview} />
+          </div>
 
           <Field label="O que é?" optional>
             {(a) => (
@@ -155,6 +163,8 @@ export function EvaluatePage() {
           <p className="-mt-2 text-center text-[13px] text-muted">{copy.privacyNote}</p>
         </div>
       </form>
+      </div>
+      <PreviewPanel result={preview} />
     </div>
   );
 }

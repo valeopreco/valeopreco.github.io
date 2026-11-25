@@ -65,6 +65,12 @@ body {
   font-feature-settings: 'tnum' 1;
 }
 
+/* Números de destaque: algarismos proporcionais (o "1" tabular da Space Grotesk tem serifa). */
+.num-display {
+  font-family: var(--font-display);
+  font-variant-numeric: lining-nums proportional-nums;
+}
+
 :focus-visible {
   outline: 2px solid var(--vale-ink);
   outline-offset: 2px;
@@ -94,6 +100,27 @@ body {
     50% {
       opacity: 0.55;
     }
+  }
+}
+
+/* Linha de opções que rola para o lado, com as bordas esmaecidas indicando que há mais. */
+.scroll-row {
+  scrollbar-width: none;
+  mask-image: linear-gradient(to right, transparent 0, #000 12px, #000 calc(100% - 24px), transparent 100%);
+  padding-inline: 12px;
+  margin-inline: -12px;
+}
+.scroll-row::-webkit-scrollbar {
+  display: none;
+}
+/* Com espaço (tablet e desktop), as opções quebram linha em vez de rolar. */
+@media (min-width: 640px) {
+  .scroll-row {
+    flex-wrap: wrap;
+    overflow: visible;
+    mask-image: none;
+    padding-inline: 0;
+    margin-inline: 0;
   }
 }
 
