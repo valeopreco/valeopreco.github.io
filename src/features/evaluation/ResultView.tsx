@@ -1,9 +1,19 @@
-import { formatBRL, formatPct, frequencyLabel, type EvaluationInput, type EvaluationResult } from '@vale/engine';
+import { formatBRL, formatPct, frequencyLabel, type EquivalenceItem, type EvaluationInput, type EvaluationResult } from '@vale/engine';
 import { categoryName } from '@/lib/categories';
 import { copy } from '@/content/copy';
 import { EstimateTag, InsightCard, MoneyValue, SetupCard, SourceNote } from '@/components/vale/bits';
 
 const dateBR = (iso: string) => new Date(`${iso}T12:00:00`).toLocaleDateString('pt-BR');
+const MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+const monthBR = (yyyyMm: string) => `${MESES.at(Number(yyyyMm.slice(5, 7)) - 1)}/${yyyyMm.slice(0, 4)}`;
+
+/** Uma linha por fonte + aviso único de correção pela inflação. */
+function sourcesNote(items: EquivalenceItem[]): string {
+  const fontes = [...new Set(items.map((i) => `${i.source}, conferido em ${dateBR(i.updatedAt)}`))].join('; ');
+  const indices = [...new Set(items.flatMap((i) => (i.adjustment ? [i.adjustment.index] : [])))];
+  const correcao = indices.length ? ` Itens marcados foram corrigidos pela inflação (${indices.join(' e ')}).` : '';
+  return `Preços de referência: ${fontes}.${correcao}`;
+}
 
 function Summary({ input }: { input: EvaluationInput }) {
   const meta = [categoryName(input.categorySlug), input.frequency ? frequencyLabel(input.frequency) : undefined].filter(Boolean);
@@ -66,14 +76,15 @@ export function ResultView({ input, result, mode }: Props) {
                 <span className="num min-w-[3.2ch] text-right text-[28px] font-semibold leading-none">{i.quantity.toLocaleString('pt-BR')}</span>
                 <span className="text-[15px] leading-snug">
                   {i.label}
-                  <span className="block text-[13px] text-muted">a {formatBRL(i.unitPriceCents)} cada</span>
+                  <span className="block text-[13px] text-muted">
+                    a {formatBRL(i.unitPriceCents)} cada
+                    {i.adjustment && <span className="whitespace-nowrap"> · corrigido até {monthBR(i.adjustment.through)}</span>}
+                  </span>
                 </span>
               </li>
             ))}
           </ul>
-          <SourceNote>
-            Preços de referência: {[...new Set(equivalences.data.items.map((i) => `${i.source}, atualizado em ${dateBR(i.updatedAt)}`))].join('; ')}.
-          </SourceNote>
+          <SourceNote>{sourcesNote(equivalences.data.items)}</SourceNote>
         </InsightCard>
       )}
 

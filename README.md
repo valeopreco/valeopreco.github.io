@@ -36,6 +36,19 @@ A interface fala só com a interface `Repository`. Visitante usa `LocalRepositor
 - Equivalências: mesma categoria + universais, de 1 a 500 unidades, preferindo 2–50, no máximo 3.
 - `ENGINE_VERSION` vai em cada snapshot. Mudou fórmula ou arredondamento → suba a versão.
 
+## Dados do IPCA e reajuste de preços
+
+`scripts/ipca.mjs` roda no build (e no dia 12 de cada mês) e consulta a API de agregados do IBGE
+(agregado 7060, sem chave). Gera:
+
+- `public/data/ipca.json`: série de 24 meses de variação dos subitens ligados às referências (lido pelo app);
+- `public/data/ipca-pesos.json`: peso e variação de todos os subitens, Brasil e Salvador (para análise).
+
+O vínculo referência → subitem fica em `scripts/ipca-map.json`. O app corrige cada preço de referência
+pela inflação acumulada dos meses posteriores à data de conferência (`adjustForInflation` no motor) e
+mostra "corrigido até mês/ano". Ao conferir um preço de novo, atualize `updatedAt` em
+`src/data/seedReferences.ts`: a correção recomeça a partir dessa data. Se a API falhar, o app segue sem reajuste.
+
 ## Ativar a nuvem (Supabase)
 
 1. Crie um projeto em supabase.com.

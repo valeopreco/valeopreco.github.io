@@ -4,6 +4,7 @@ import type { Repository } from '@/data/repositories/types';
 import type { SavedEvaluation } from '@/data/models';
 import { newId } from '@/data/models';
 import { SEED_REFERENCES } from '@/data/seedReferences';
+import { applyIpca, loadIpca } from '@/data/ipca';
 
 export type DraftErrors = Partial<Record<'price' | 'frequencyTimes' | 'uses', string>>;
 
@@ -49,8 +50,9 @@ export function draftToInput(f: DraftForm): { input?: EvaluationInput; errors: D
 
 /** Monta o contexto atual: perfil, metas e referências (padrão + próprias). */
 export async function loadContext(repo: Repository): Promise<EvaluationContext> {
-  const [settings, goals, own] = await Promise.all([repo.getSettings(), repo.listGoals(), repo.listOwnReferences()]);
-  const ctx: EvaluationContext = { goals, references: [...SEED_REFERENCES, ...own] };
+  const [settings, goals, own, ipca] = await Promise.all([repo.getSettings(), repo.listGoals(), repo.listOwnReferences(), loadIpca()]);
+  // Referências padrão corrigidas pela inflação; as próprias do usuário ficam como ele cadastrou.
+  const ctx: EvaluationContext = { goals, references: [...applyIpca(SEED_REFERENCES, ipca), ...own] };
   if (settings.financial) ctx.financial = settings.financial;
   return ctx;
 }

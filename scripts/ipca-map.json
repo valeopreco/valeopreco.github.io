@@ -1,19 +1,52 @@
 {
-  "_comentario": "Liga cada referência de preço do VALE? (id sem o prefixo seed-) a um subitem do IPCA. Vale o primeiro nome que existir no IBGE. Sem correspondência, o preço não é corrigido.",
-  "cafe": ["Cafezinho", "Café da manhã"],
-  "refeicao": ["Refeição"],
-  "onibus": ["Ônibus urbano"],
-  "pizza": ["Lanche", "Refeição"],
-  "corrida": ["Transporte por aplicativo", "Táxi"],
-  "gasolina": ["Gasolina"],
-  "camiseta": ["Camisa/camiseta masculina", "Camisa masculina", "Camiseta masculina"],
-  "meias": ["Meia", "Meias", "Roupa íntima"],
-  "streaming": ["Serviço de streaming", "Streaming", "TV por assinatura"],
-  "fone": ["Acessórios e peças", "Aparelho telefônico"],
-  "cinema": ["Cinema, teatro e concertos", "Cinema"],
-  "livro": ["Livro não didático", "Livros não didáticos"],
-  "curso": ["Curso de idiomas", "Cursos diversos"],
-  "limpeza": ["Água sanitária", "Sabão em pó", "Detergente"],
-  "academia": ["Atividades físicas", "Academia"],
-  "corte": ["Cabeleireiro e barbeiro", "Cabeleireiro"]
+  "_comentario": "Liga cada referência de preço do VALE? (id sem o prefixo seed-) a um subitem (ou item) do IPCA. Vale o primeiro nome que existir no IBGE. Sem par confiável, a referência fica de fora e o preço não é corrigido: fone, streaming e meias não têm subitem equivalente.",
+  "cafe": [
+    "Cafezinho",
+    "Café da manhã"
+  ],
+  "refeicao": [
+    "Refeição"
+  ],
+  "onibus": [
+    "Ônibus urbano"
+  ],
+  "pizza": [
+    "Lanche",
+    "Refeição"
+  ],
+  "corrida": [
+    "Transporte por aplicativo",
+    "Táxi"
+  ],
+  "gasolina": [
+    "Gasolina"
+  ],
+  "camiseta": [
+    "Camisa/camiseta masculina",
+    "Camisa masculina",
+    "Camiseta masculina"
+  ],
+  "cinema": [
+    "Cinema, teatro e concertos",
+    "Cinema"
+  ],
+  "livro": [
+    "Livro não didático",
+    "Livros não didáticos"
+  ],
+  "curso": [
+    "Curso de idioma"
+  ],
+  "limpeza": [
+    "Artigos de limpeza",
+    "Água sanitária"
+  ],
+  "academia": [
+    "Atividades físicas",
+    "Academia"
+  ],
+  "corte": [
+    "Cabeleireiro e barbeiro",
+    "Cabeleireiro"
+  ]
 }

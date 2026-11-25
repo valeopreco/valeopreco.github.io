@@ -53,7 +53,11 @@ async function main() {
   const mapa = JSON.parse(await readFile(new URL('./ipca-map.json', import.meta.url), 'utf8'));
   delete mapa._comentario;
   const brasil = Object.values(regioes.Brasil ?? {});
-  const porNome = new Map(brasil.filter((r) => r.nivel === 'subitem').map((r) => [norm(r.nome), r]));
+  // Subitens primeiro; itens (nível acima) como alternativa quando o nome não existe como subitem.
+  const porNome = new Map();
+  for (const nivelAceito of ['item', 'subitem']) {
+    for (const r of brasil.filter((x) => x.nivel === nivelAceito)) porNome.set(norm(r.nome), r);
+  }
   const ligados = {};
   const semPar = [];
   for (const [ref, nomes] of Object.entries(mapa)) {

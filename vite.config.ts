@@ -31,7 +31,7 @@ function seo(siteUrl?: string): Plugin {
       if (!base) return html;
       return html
         .replace('</title>', `</title>\n    <link rel="canonical" href="${base}/" />\n    <meta property="og:url" content="${base}/" />`)
-        .replace('content="./og-image.png"', `content="${base}/og-image.png"`)
+        .replace('content="/og-image.png"', `content="${base}/og-image.png"`)
         .replace('"inLanguage": "pt-BR",', `"inLanguage": "pt-BR",\n        "url": "${base}/",`);
     },
     generateBundle() {
@@ -66,7 +66,8 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_');
   return {
   // Caminhos relativos: o app funciona na raiz de um domínio ou em subpasta.
-  base: './',
+  // '/' no GitHub Pages (rotas profundas como /historico/abc); './' só para prévias em subpasta.
+  base: process.env.VITE_BASE || '/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -98,7 +99,7 @@ export default defineConfig(({ mode }) => {
       },
       workbox: {
         navigateFallback: 'index.html',
-        globPatterns: ['**/*.{js,css,html,svg,png,woff2,txt}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,woff2,txt}', 'data/ipca.json'],
       },
     }),
   ],
