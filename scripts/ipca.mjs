@@ -23,6 +23,8 @@ function nivel(codigo) {
 async function main() {
   const rms = await get('/localidades/N7');
   const salvador = rms.find((l) => /salvador/i.test(l.nome));
+  console.log(`Regiões metropolitanas no IPCA: ${rms.map((l) => `${l.id}=${l.nome}`).join('; ')}`);
+  console.log(`Salvador: ${salvador ? salvador.id : 'não encontrada'}`);
   const locs = ['N1[all]', salvador ? `N7[${salvador.id}]` : null].filter(Boolean).join('|');
 
   const data = await get(`/periodos/-1/variaveis/63|66?localidades=${locs}&classificacao=315[all]`);
