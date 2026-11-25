@@ -58,6 +58,17 @@ export interface PriceReference {
   universal: boolean;
   estimated: boolean;
   active: boolean;
+  /** Correção pela inflação aplicada sobre o preço conferido em updatedAt. */
+  adjustment?: PriceAdjustment;
+}
+
+export interface PriceAdjustment {
+  /** Último mês do índice aplicado (AAAA-MM). */
+  through: string;
+  /** Variação acumulada aplicada, em %. */
+  pct: number;
+  /** Ex.: "IPCA/IBGE, Salvador". */
+  index: string;
 }
 
 export interface EvaluationContext {
@@ -92,6 +103,7 @@ export interface EquivalenceItem {
   source: string;
   updatedAt: string;
   estimated: boolean;
+  adjustment?: PriceAdjustment;
 }
 
 export interface RecurrenceData {

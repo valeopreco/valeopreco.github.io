@@ -5,5 +5,6 @@ export * from './equivalences';
 export * from './recurrence';
 export * from './costPerUse';
 export * from './goals';
+export * from './inflation';
 export * from './evaluate';
 export * from './version';

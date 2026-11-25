@@ -49,6 +49,7 @@ export function computeEquivalences(
         source: ref.source,
         updatedAt: ref.updatedAt,
         estimated: ref.estimated,
+        ...(ref.adjustment ? { adjustment: ref.adjustment } : {}),
       })),
     },
   };
