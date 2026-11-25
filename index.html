@@ -41,16 +41,25 @@
   </head>
   <body>
     <div id="root">
-      <!-- Conteúdo estático para buscadores e para quem está sem JavaScript; o app substitui ao carregar. -->
-      <main style="max-width: 40rem; margin: 0 auto; padding: 48px 20px; font-family: system-ui, sans-serif; color: #171717">
-        <h1>VALE? O preço é só o começo.</h1>
-        <p>
-          O VALE? é uma ferramenta gratuita que ajuda você a refletir antes de comprar. Informe o preço e veja quantas horas de trabalho ele
-          representa, o que mais caberia no mesmo valor, quanto um hábito soma em um ano, quanto custa cada uso e como a compra se relaciona com
-          seus objetivos. Não é preciso criar conta, e a decisão continua sua.
-        </p>
-        <noscript><p>Ative o JavaScript para usar o VALE?.</p></noscript>
-      </main>
+      <!--
+        Abertura exibida por uma fração de segundo enquanto o app carrega, com as cores e a marca do VALE?.
+        O texto completo para buscadores fica no <noscript>, na meta description e no JSON-LD.
+      -->
+      <div style="min-height: 100dvh; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px; background: #f3f0e7; color: #171717; font-family: 'Space Grotesk', system-ui, sans-serif">
+        <p style="margin: 0; font-size: 40px; font-weight: 700; letter-spacing: -0.03em; line-height: 1">VALE<span style="background: #c4f36a; border-radius: 6px; padding: 0 4px; margin-left: 2px">?</span></p>
+        <p style="margin: 0; font-size: 15px; color: #66665e">O preço é só o começo.</p>
+      </div>
+      <noscript>
+        <main style="max-width: 40rem; margin: 0 auto; padding: 0 20px 48px; font-family: system-ui, sans-serif; color: #171717">
+          <h1>VALE? O preço é só o começo.</h1>
+          <p>
+            O VALE? é uma ferramenta gratuita que ajuda você a refletir antes de comprar. Informe o preço e veja quantas horas de trabalho ele
+            representa, o que mais caberia no mesmo valor, quanto um hábito soma em um ano, quanto custa cada uso e como a compra se relaciona com
+            seus objetivos. Não é preciso criar conta, e a decisão continua sua.
+          </p>
+          <p>Ative o JavaScript para usar o VALE?.</p>
+        </main>
+      </noscript>
     </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
