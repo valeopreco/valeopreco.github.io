@@ -21,11 +21,8 @@ function nivel(codigo) {
 }
 
 async function main() {
-  const rms = await get('/localidades/N7');
-  const salvador = rms.find((l) => /salvador/i.test(l.nome));
-  console.log(`Regiões metropolitanas no IPCA: ${rms.map((l) => `${l.id}=${l.nome}`).join('; ')}`);
-  console.log(`Salvador: ${salvador ? salvador.id : 'não encontrada'}`);
-  const locs = ['N1[all]', salvador ? `N7[${salvador.id}]` : null].filter(Boolean).join('|');
+  // Brasil + todas as regiões metropolitanas; depois fica só Brasil e Salvador.
+  const locs = 'N1[all]|N7[all]';
 
   const data = await get(`/periodos/-1/variaveis/63|66?localidades=${locs}&classificacao=315[all]`);
   const byVar = Object.fromEntries(data.map((v) => [v.id, v]));
@@ -38,6 +35,7 @@ async function main() {
       const [codigo, ...resto] = rotulo.split('.');
       const nome = resto.join('.').trim() || rotulo;
       for (const s of r.series) {
+        if (!/^brasil$|salvador/i.test(s.localidade.nome)) continue;
         const reg = (regioes[s.localidade.nome] ??= {});
         const row = (reg[catId] ??= { id: catId, codigo, nome, nivel: nivel(codigo) });
         const v = Number(String(s.serie[periodo]).replace(',', '.'));
