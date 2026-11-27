@@ -6,7 +6,8 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "typecheck": "tsc -b"
+    "typecheck": "tsc -b",
+    "lab:material": "vite-node lab/gerar-material.ts"
   },
   "dependencies": {
     "@fontsource/manrope": "^5.3.0",
